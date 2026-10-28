@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TechSure Support: Returns and Claims</title>
+  <meta name="description" content="Start, check, update or cancel a return or damage claim with Sofia, TechSure's virtual assistant, in English or Spanish.">
+  <!-- TechSure is a fictional company created for a training exercise. -->
+  <style>
+    :root {
+      --brand: #0b3d91; --brand-2: #1d6fd6; --accent: #e8710a; --ink: #172033; --muted: #5b6475;
+      --line: #e3e7ee; --bg: #f4f6fb; --card: #ffffff; --ok: #1f8f5f;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.55; }
+    a { color: var(--brand); }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+    /* ---------- header ---------- */
+    header { background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+    .bar { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: 1.5px; color: var(--brand); font-size: 20px; text-decoration: none; }
+    .logo svg { width: 30px; height: 30px; }
+    nav { display: flex; align-items: center; gap: 22px; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 14px; }
+    nav a:hover { color: var(--brand); }
+    .lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+    .lang button { border: 0; background: #fff; padding: 6px 12px; font-size: 13px; cursor: pointer; color: var(--muted); }
+    .lang button[aria-pressed="true"] { background: var(--brand); color: #fff; }
+    @media (max-width: 760px) { nav a { display: none; } }
+
+    /* ---------- hero ---------- */
+    .hero { background: radial-gradient(1200px 400px at 10% -10%, #2b7be4 0%, transparent 60%), linear-gradient(135deg, #0a2f75 0%, #0b3d91 55%, #1458b8 100%); color: #fff; }
+    .hero .wrap { display: grid; grid-template-columns: 1.25fr minmax(340px, 0.9fr); gap: 36px; padding-top: 56px; padding-bottom: 64px; align-items: center; }
+    .eyebrow { display: inline-block; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); padding: 4px 12px; border-radius: 999px; font-size: 13px; margin-bottom: 14px; }
+    .hero h1 { font-size: 42px; line-height: 1.12; margin: 0 0 14px; letter-spacing: -0.5px; }
+    .hero p.lead { font-size: 18px; color: #dbe7ff; margin: 0 0 22px; max-width: 560px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); padding: 8px 14px; border-radius: 10px; font-size: 14px; }
+    .chip svg { width: 18px; height: 18px; flex: none; }
+    @media (max-width: 900px) { .hero .wrap { grid-template-columns: 1fr; } .hero h1 { font-size: 34px; } }
+
+    .call-card { text-align: center; background: #fff; color: var(--ink); border-radius: 16px; padding: 24px; box-shadow: 0 24px 48px rgba(3, 18, 51, 0.35); }
+    .call-card h2 { margin: 0 0 6px; font-size: 22px; color: var(--accent); }
+    .call-card p { margin: 0; color: var(--muted); font-size: 15px; }
+    .call-card .small { font-size: 13px; }
+    /* The Click-to-Call button is moved into this slot by the script at the bottom of the page. */
+    #call-slot { margin: 16px 0 12px; padding-bottom: 36px; min-height: 96px; }
+    #call-slot .webrtc_widget_outer_wrapper { position: static !important; align-items: center !important; }
+    #call-slot { display: flex; justify-content: center; }
+    .call-steps { margin: 0; padding-left: 18px; font-size: 13px; color: var(--muted); }
+
+    /* ---------- sections ---------- */
+    section.block { padding: 56px 0 8px; }
+    .kicker { color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+    h2.title { font-size: 28px; margin: 6px 0 8px; letter-spacing: -0.3px; }
+    .sub { color: var(--muted); max-width: 680px; margin: 0 0 26px; }
+
+    .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+    .card .ic { width: 44px; height: 44px; border-radius: 12px; background: #e8efff; display: grid; place-items: center; margin-bottom: 12px; }
+    .card .ic svg { width: 24px; height: 24px; stroke: var(--brand); }
+    .card h3 { margin: 0 0 6px; font-size: 17px; }
+    .card p { margin: 0; font-size: 14px; color: var(--muted); }
+    @media (max-width: 960px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .cards { grid-template-columns: 1fr; } }
+
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: s; }
+    .step { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 18px 18px; position: relative; }
+    .step::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--brand); color: #fff; font-weight: 700; margin-bottom: 10px; }
+    .step h3 { margin: 0 0 4px; font-size: 16px; }
+    .step p { margin: 0; font-size: 14px; color: var(--muted); }
+    @media (max-width: 960px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+    @media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
+    .ready { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+    .ready ul { margin: 0; padding: 0; list-style: none; }
+    .ready li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px dashed var(--line); font-size: 15px; }
+    .ready li:last-child { border-bottom: 0; }
+    .ready li svg { width: 20px; height: 20px; flex: none; margin-top: 2px; stroke: var(--ok); }
+    .note { font-size: 13px; color: var(--muted); }
+
+    /* mock of the claim-on-screen page (xApp) */
+    .mock { background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 18px 40px rgba(11, 61, 145, 0.14); overflow: hidden; max-width: 420px; margin-left: auto; }
+    @media (max-width: 860px) { .mock { margin: 0 auto; } }
+    .mock .top { background: var(--brand); color: #fff; padding: 12px 16px; font-weight: 700; font-size: 15px; }
+    .mock .body { padding: 16px; background: #f5f7fb; display: grid; gap: 10px; }
+    .mock .box { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+    .mock .num { font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+    .mock .pill { display: inline-block; margin-top: 6px; padding: 3px 10px; border-radius: 999px; background: #e8efff; color: var(--brand); font-weight: 700; font-size: 13px; }
+    .mock dt { font-size: 11px; color: var(--muted); text-transform: uppercase; margin-top: 8px; }
+    .mock dt:first-child { margin-top: 0; }
+    .mock dd { margin: 2px 0 0; font-size: 14px; }
+    .mock .tag { position: absolute; }
+    .example { text-align: center; font-size: 12px; color: var(--muted); padding: 8px 0 12px; background: #f5f7fb; }
+
+    .pinlink { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; background: var(--brand); color: #fff; padding: 10px 16px; border-radius: 10px; text-decoration: none; font-weight: 600; }
+    .pinlink:hover { background: #0a3380; }
+
+    details { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
+    summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 10px; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; color: var(--brand); font-size: 20px; line-height: 1; }
+    details[open] summary::after { content: "\2212"; }
+    details p { margin: 10px 0 0; color: var(--muted); font-size: 15px; }
+
+    footer { margin-top: 64px; background: #0c1a35; color: #b9c4dc; }
+    footer .wrap { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 28px; padding-top: 36px; padding-bottom: 28px; }
+    footer h4 { color: #fff; margin: 0 0 8px; font-size: 14px; }
+    footer a { color: #b9c4dc; text-decoration: none; display: block; font-size: 14px; padding: 3px 0; }
+    footer .legal { border-top: 1px solid #1d2c4d; text-align: center; font-size: 12px; padding: 14px 20px; }
+    @media (max-width: 760px) { footer .wrap { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="wrap bar">
+      <a class="logo" href="#top" aria-label="TechSure">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0b3d91"/><path d="M9 10h14M16 10v13" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+        TECHSURE
+      </a>
+      <nav>
+        <a href="#help" data-es="Qué puede hacer Sofia" data-en="What Sofia can do">What Sofia can do</a>
+        <a href="#how" data-es="Cómo funciona" data-en="How it works">How it works</a>
+        <a href="#screen" data-es="Tu reclamación" data-en="Your claim">Your claim</a>
+        <a href="#faq" data-es="Preguntas" data-en="FAQ">FAQ</a>
+        <span class="lang" role="group" aria-label="Language">
+          <button type="button" id="btn-en" aria-pressed="true">EN</button>
+          <button type="button" id="btn-es" aria-pressed="false">ES</button>
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ================= HERO ================= -->
+    <div class="hero">
+      <div class="wrap">
+        <div>
+          <span class="eyebrow" data-es="Soporte de devoluciones y reclamaciones" data-en="Returns and claims support">Returns and claims support</span>
+          <h1 data-es="Resuelva su reclamación en minutos, hablando." data-en="Sort out your claim in minutes, just by talking.">Sort out your claim in minutes, just by talking.</h1>
+          <p class="lead" data-es="Inicie, consulte, actualice o cancele una devolución o una reclamación por daños con Sofia, nuestra asistente virtual. Sin esperas, a cualquier hora." data-en="Start, check, update or cancel a return or damage claim with Sofia, our virtual assistant. No waiting on hold, any time of day.">Start, check, update or cancel a return or damage claim with Sofia, our virtual assistant. No waiting on hold, any time of day.</p>
+          <div class="chips">
+            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-es="Disponible 24 horas" data-en="Available 24 hours">Available 24 hours</span></span>
+            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg><span data-es="Inglés y español" data-en="English and Spanish">English and Spanish</span></span>
+            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span data-es="Verificación segura" data-en="Secure verification">Secure verification</span></span>
+          </div>
+        </div>
+
+        <div class="call-card" id="call">
+          <h2 data-es="Hable con Sofia" data-en="Talk to Sofia">Talk to Sofia</h2>
+          <p data-es="Inicie una llamada de voz desde su navegador. Permita el acceso al micrófono cuando se le pida." data-en="Start a voice call from your browser. Allow microphone access when your browser asks.">Start a voice call from your browser. Allow microphone access when your browser asks.</p>
+
+          <div id="call-slot"></div>
+
+          <p class="small" id="call-help" data-es="Pulse el botón verde de arriba para iniciar la llamada." data-en="Press the green button above to start the call.">Press the green button above to start the call.</p>
+          <p class="small" style="margin-top:10px;"><span data-es="Tenga a mano: su teléfono, número de pedido (ORD- y seis dígitos) y código postal." data-en="Have ready: your phone number, order number (ORD- and six digits) and postal code.">Have ready: your phone number, order number (ORD- and six digits) and postal code.</span></p>
+          <p class="small" style="margin-top:6px;" data-es="Inglés y español. Diga «en español» o «in English» para cambiar." data-en="English and Spanish. Say “en español” or “in English” to switch.">English and Spanish. Say “en español” or “in English” to switch.</p>
+
+          <!-- Click-to-Call widget -->
+          <script src="https://github.com/Cognigy/click-to-call-widget/releases/latest/download/webRTCWidget.js"></script>
+          <script>
+            addEventListener("load", (event) => {if (window.initWebRTCWidget) {window.initWebRTCWidget("https://endpoint-trial.cognigy.ai/5b4c34b3ae47235ee06da83007bcbb138e9181a1edc868a3b18c9c2224be9191")}});
+          </script>
+          <script>
+            // Move the floating Click-to-Call widget into the call card once it has rendered.
+            (function () {
+              var tries = 0;
+              var timer = setInterval(function () {
+                var w = document.querySelector(".webrtc_widget_outer_wrapper");
+                var slot = document.getElementById("call-slot");
+                if (w && slot) {
+                  var root = w;
+                  while (root.parentElement && root.parentElement !== document.body) { root = root.parentElement; }
+                  if (root !== slot && !slot.contains(root)) { slot.appendChild(root); }
+                  clearInterval(timer);
+                } else if (++tries > 60) {
+                  clearInterval(timer);   // give up: the widget stays where it is (floating, bottom right)
+                }
+              }, 250);
+            })();
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= WHAT SOFIA CAN DO ================= -->
+    <section class="block wrap" id="help">
+      <div class="kicker" data-es="Qué puede hacer Sofia" data-en="What Sofia can do">What Sofia can do</div>
+      <h2 class="title" data-es="Todo lo que necesita para su reclamación" data-en="Everything you need for your claim">Everything you need for your claim</h2>
+      <p class="sub" data-es="Sofia le atiende por voz y le guía paso a paso. Para ver o cambiar su reclamación, primero verifica su identidad. Las preguntas generales no necesitan verificación." data-en="Sofia talks you through it, step by step. To see or change a claim she first verifies who you are. General questions need no verification.">Sofia talks you through it, step by step. To see or change a claim she first verifies who you are. General questions need no verification.</p>
+      <div class="cards">
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></div>
+          <h3 data-es="Iniciar una reclamación" data-en="Start a claim">Start a claim</h3>
+          <p data-es="Cuéntele el problema y el ID del producto. Recibe su número de reclamación al instante." data-en="Tell her the problem and the product ID. You get your claim number right away.">Tell her the problem and the product ID. You get your claim number right away.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+          <h3 data-es="Consultar el estado" data-en="Check the status">Check the status</h3>
+          <p data-es="Diga su número de reclamación y escuche el estado y el número de seguimiento." data-en="Say your claim number and hear the status and tracking number.">Say your claim number and hear the status and tracking number.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></div>
+          <h3 data-es="Actualizar su reclamación" data-en="Update your claim">Update your claim</h3>
+          <p data-es="Añada un número de seguimiento, una nota o corrija sus datos de contacto." data-en="Add a tracking number, a note, or correct your contact details.">Add a tracking number, a note, or correct your contact details.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
+          <h3 data-es="Cancelar una reclamación" data-en="Cancel a claim">Cancel a claim</h3>
+          <p data-es="Sofia confirma el número y comprueba que se puede cancelar antes de hacerlo." data-en="Sofia confirms the number and checks it can be cancelled before she does it.">Sofia confirms the number and checks it can be cancelled before she does it.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HOW IT WORKS ================= -->
+    <section class="block wrap" id="how">
+      <div class="kicker" data-es="Cómo funciona" data-en="How it works">How it works</div>
+      <h2 class="title" data-es="De la llamada a la devolución, en cuatro pasos" data-en="From the call to your refund, in four steps">From the call to your refund, in four steps</h2>
+      <div class="steps">
+        <div class="step"><h3 data-es="Cuéntenos qué pasó" data-en="Tell us what happened">Tell us what happened</h3><p data-es="Llame a Sofia y describa el problema con su producto." data-en="Call Sofia and describe the problem with your product.">Call Sofia and describe the problem with your product.</p></div>
+        <div class="step"><h3 data-es="Reciba su número" data-en="Get your claim number">Get your claim number</h3><p data-es="Anótelo: lo necesitará en cada paso." data-en="Write it down. You need it for every step.">Write it down. You need it for every step.</p></div>
+        <div class="step"><h3 data-es="Envíe el artículo" data-en="Send the item back">Send the item back</h3><p data-es="Añada el número de seguimiento del transportista a su reclamación." data-en="Add the carrier tracking number to your claim.">Add the carrier tracking number to your claim.</p></div>
+        <div class="step"><h3 data-es="Revisamos y decidimos" data-en="We inspect and decide">We inspect and decide</h3><p data-es="La inspección tarda de 3 a 5 días hábiles desde que recibimos el artículo." data-en="Inspection takes 3 to 5 business days after we receive the item.">Inspection takes 3 to 5 business days after we receive the item.</p></div>
+      </div>
+    </section>
+
+    <!-- ================= CLAIM ON SCREEN ================= -->
+    <section class="block wrap" id="screen">
+      <div class="split">
+        <div>
+          <div class="kicker" data-es="Su reclamación en pantalla" data-en="Your claim on screen">Your claim on screen</div>
+          <h2 class="title" data-es="Vea su reclamación mientras habla" data-en="See your claim while you talk">See your claim while you talk</h2>
+          <p class="sub" style="margin-bottom:16px;" data-es="Durante la llamada, Sofia puede leerle un código de seis caracteres. Ábralo aquí e introdúzcalo para ver el resumen: estado, producto, seguimiento e historial." data-en="During the call, Sofia can read you a six-character code. Open the page here and enter it to see the summary: status, product, tracking and history.">During the call, Sofia can read you a six-character code. Open the page here and enter it to see the summary: status, product, tracking and history.</p>
+          <a class="pinlink" id="xapp-link" href="https://static-trial.cognigy.ai/" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8"/></svg>
+            <span data-es="Abrir la página del resumen" data-en="Open the claim summary page">Open the claim summary page</span>
+          </a>
+          <p class="note" style="margin-top:10px;" data-es="El código tiene seis caracteres, en minúsculas y números, sin espacios. La letra o no es el número cero." data-en="The code is six characters, lowercase letters and numbers, no spaces. The letter o is not the number zero.">The code is six characters, lowercase letters and numbers, no spaces. The letter o is not the number zero.</p>
+        </div>
+        <div>
+          <div class="mock" aria-label="Example of the claim summary page">
+            <div class="top" data-es="Reclamaciones TechSure" data-en="TechSure Claims">TechSure Claims</div>
+            <div class="body">
+              <div class="box"><div class="num">C-482564</div><span class="pill" data-es="Pendiente de devolución" data-en="Awaiting return">Awaiting return</span></div>
+              <div class="box"><dl style="margin:0;">
+                <dt data-es="ID del producto" data-en="Product ID">Product ID</dt><dd>P-510</dd>
+                <dt data-es="Problema reportado" data-en="Problem reported">Problem reported</dt><dd data-es="La copa de los auriculares llegó agrietada." data-en="The ear cup is cracked.">The ear cup is cracked.</dd>
+                <dt data-es="Número de seguimiento" data-en="Tracking number">Tracking number</dt><dd>1Z999AA10123456785</dd>
+              </dl></div>
+            </div>
+            <div class="example" data-es="Ejemplo ilustrativo" data-en="Illustrative example">Illustrative example</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= READY ================= -->
+    <section class="block wrap" id="ready">
+      <div class="split">
+        <div>
+          <div class="kicker" data-es="Antes de llamar" data-en="Before you call">Before you call</div>
+          <h2 class="title" data-es="Tenga esto a mano" data-en="Have these ready">Have these ready</h2>
+          <p class="sub" data-es="Para proteger su cuenta, Sofia pide tres datos del mismo pedido antes de mostrar o cambiar nada. Las preguntas sobre nuestras políticas no los necesitan." data-en="To protect your account, Sofia asks for three details from the same order before showing or changing anything. Questions about our policies need none of them.">To protect your account, Sofia asks for three details from the same order before showing or changing anything. Questions about our policies need none of them.</p>
+        </div>
+        <div class="ready">
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg><span data-es="El teléfono del pedido" data-en="The phone number on your order">The phone number on your order</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg><span data-es="El número de pedido (ORD- y seis dígitos)" data-en="Your order number (ORD- followed by six digits)">Your order number (ORD- followed by six digits)</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg><span data-es="El código postal del pedido" data-en="The postal code on your order">The postal code on your order</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg><span data-es="El ID del producto, impreso en la confirmación y en la caja" data-en="The product ID, printed on your confirmation and on the box">The product ID, printed on your confirmation and on the box</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FAQ ================= -->
+    <section class="block wrap" id="faq">
+      <div class="kicker" data-es="Preguntas frecuentes" data-en="Frequently asked questions">Frequently asked questions</div>
+      <h2 class="title" data-es="Respuestas rápidas" data-en="Quick answers">Quick answers</h2>
+      <details><summary data-es="¿Cuánto tarda una devolución?" data-en="How long does a return take?">How long does a return take?</summary><p data-es="Unos 3 a 5 días hábiles desde que recibimos su artículo; después, de 5 a 7 días hábiles para el reembolso." data-en="About 3 to 5 business days after we receive your item, then 5 to 7 business days for the refund.">About 3 to 5 business days after we receive your item, then 5 to 7 business days for the refund.</p></details>
+      <details><summary data-es="¿Puedo cancelar una reclamación?" data-en="Can I cancel a claim?">Can I cancel a claim?</summary><p data-es="Sí, sin costo, mientras el estado sea «pendiente de devolución». Cuando el artículo ya está en revisión, pida hablar con un agente." data-en="Yes, free of charge, while its status is “Awaiting return”. Once the item is under review, ask for a human agent.">Yes, free of charge, while its status is “Awaiting return”. Once the item is under review, ask for a human agent.</p></details>
+      <details><summary data-es="¿Dónde encuentro mi número de pedido?" data-en="Where do I find my order number?">Where do I find my order number?</summary><p data-es="Empieza con ORD- seguido de seis dígitos. Está en el correo de confirmación, en la hoja de embalaje de la caja y en la sección de pedidos de su cuenta." data-en="It starts with ORD- followed by six digits. You will find it in your confirmation email, on the packing slip in the box, and in the Orders section of your account.">It starts with ORD- followed by six digits. You will find it in your confirmation email, on the packing slip in the box, and in the Orders section of your account.</p></details>
+      <details><summary data-es="¿Puedo hablar con una persona?" data-en="Can I talk to a person?">Can I talk to a person?</summary><p data-es="Sí. Pida un agente humano en cualquier momento, sin necesidad de verificar su identidad." data-en="Yes. Ask for a human agent at any time. You do not need to verify your identity first.">Yes. Ask for a human agent at any time. You do not need to verify your identity first.</p></details>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div>
+        <h4>TECHSURE</h4>
+        <p style="margin:0;font-size:14px;" data-es="Electrónica de consumo con soporte posventa en inglés y español." data-en="Consumer electronics with after-sales support in English and Spanish.">Consumer electronics with after-sales support in English and Spanish.</p>
+      </div>
+      <div>
+        <h4 data-es="Soporte" data-en="Support">Support</h4>
+        <a href="#call" data-es="Hablar con Sofia" data-en="Talk to Sofia">Talk to Sofia</a>
+        <a href="#faq" data-es="Preguntas frecuentes" data-en="FAQ">FAQ</a>
+        <a href="#how" data-es="Cómo funciona" data-en="How it works">How it works</a>
+      </div>
+      <div>
+        <h4 data-es="Su reclamación" data-en="Your claim">Your claim</h4>
+        <a href="https://static-trial.cognigy.ai/" target="_blank" rel="noopener" data-es="Resumen en pantalla" data-en="Claim summary page">Claim summary page</a>
+        <a href="#ready" data-es="Antes de llamar" data-en="Before you call">Before you call</a>
+      </div>
+    </div>
+    <div class="legal" data-es="TechSure es una empresa ficticia creada para un ejercicio de formación. © 2026" data-en="TechSure is a fictional company created for a training exercise. © 2026">TechSure is a fictional company created for a training exercise. © 2026</div>
+  </footer>
+
+  <script>
+    // English / Spanish toggle for the whole page.
+    (function () {
+      var nodes = document.querySelectorAll("[data-es]");
+      function setLang(lang) {
+        nodes.forEach(function (el) { el.innerHTML = (lang === "es") ? el.getAttribute("data-es") : (el.getAttribute("data-en") || el.innerHTML); });
+        document.documentElement.lang = lang;
+        document.getElementById("btn-en").setAttribute("aria-pressed", lang === "en");
+        document.getElementById("btn-es").setAttribute("aria-pressed", lang === "es");
+      }
+      // remember the English text of elements that do not carry data-en
+      nodes.forEach(function (el) { if (!el.getAttribute("data-en")) { el.setAttribute("data-en", el.innerHTML); } });
+      document.getElementById("btn-en").addEventListener("click", function () { setLang("en"); });
+      document.getElementById("btn-es").addEventListener("click", function () { setLang("es"); });
+    })();
+  </script>
+</body>
+</html>
